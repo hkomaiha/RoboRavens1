@@ -11,13 +11,22 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "ctre/Phoenix.h"
+
+TalonSRX srx = {1};
+
+using namespace frc;
+
+
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+  srx.Set(ControlMode::PercentOutput,1);
 }
 
-/**
+/*
  * This function is called every robot packet, no matter the mode. Use
  * this for items like diagnostics that you want ran during disabled,
  * autonomous, teleoperated and test.
@@ -61,14 +70,15 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  WPI_TalonSRX srx = {1};
+
+srx.Set(ControlMode::PercentOutput,  .5);
+}
 
 void Robot::TestPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
-void run
-
-
 
