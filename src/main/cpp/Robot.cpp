@@ -6,24 +6,16 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
-#include <iostream>
+ 
+ #include "ctre/Phoenix.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
-
-#include "ctre/Phoenix.h"
-
 TalonSRX srx = {1};
-
-using namespace frc;
-
-
-
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-  srx.Set(ControlMode::PercentOutput,1);
+  
 }
 
 /*
@@ -56,7 +48,7 @@ void Robot::AutonomousInit() {
   if (m_autoSelected == kAutoNameCustom) {
     // Custom Auto goes here
   } else {
-    // Default Auto goes here
+    // Default Auto goes herek
   }
 }
 
@@ -71,9 +63,7 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
-  WPI_TalonSRX srx = {1};
-
-srx.Set(ControlMode::PercentOutput,  .5);
+ srx.Set(ControlMode::PercentOutput, .1);
 }
 
 void Robot::TestPeriodic() {}
@@ -81,4 +71,3 @@ void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
-
