@@ -10,7 +10,19 @@
  #include "ctre/Phoenix.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
-TalonSRX srx = {1};
+#include <frc/SpeedControllerGroup.h>
+#include <frc/drive/DifferentialDrive.h>
+#include <frc/PWMVictorSPX.h>
+#include <frc/GenericHID.h>
+#include <frc/TimedRobot.h>
+
+WPI_TalonSRX sr1 = {1};
+WPI_TalonSRX sr2 = {2};
+WPI_TalonSRX sr3 = {3};  
+WPI_TalonSRX sr4 = {4};
+SpeedControllerGroup left(sr1,sr2);
+SpeedControllerGroup right(sr3,sr4);
+DifferentialDrive drivetrain(left,right);
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
@@ -63,7 +75,18 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
- srx.Set(ControlMode::PercentOutput, .1);
+// sr1.Set(ControlMode::PercentOutput, -.1);
+// sr2.Set(ControlMode::PercentOutput, -.1);
+// sr3.Set(ControlMode::PercentOutput, .1);
+// sr4.Set(ControlMode::PercentOutput, .1);
+double yLoc = controller.GetY(frc::GenericHID::JoystickHand::kRightHand)/2;
+double xLoc = controller.GetX(frc::GenericHID::JoystickHand::kRightHand)/2;
+drivetrain.ArcadeDrive(yLoc, xLoc);
+std::cout << "Controller y:" << yLoc << "\n";
+std::cout << "Controller x:" << xLoc << "\n";
+// std::cout<< controller.GetY(frc::GenericHID::JoystickHand::kLeftHand)<<std:: endl;
+// std::cout<< controller.GetX(frc::GenericHID::JoystickHand::kRightHand)<<std::endl;
+
 }
 
 void Robot::TestPeriodic() {}
@@ -71,3 +94,4 @@ void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+

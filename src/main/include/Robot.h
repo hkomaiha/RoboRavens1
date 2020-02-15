@@ -11,7 +11,9 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
-using name space frc;
+#include <frc/XboxController.h>
+
+ using namespace frc;
 
 class Robot : public frc::TimedRobot {
  public:
@@ -28,5 +30,6 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
-  WPI_TalonSRX hello;
+  XboxController controller{0};
+
 };
