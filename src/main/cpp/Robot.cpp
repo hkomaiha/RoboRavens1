@@ -6,23 +6,11 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
- 
- #include "ctre/Phoenix.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/SpeedControllerGroup.h>
-#include <frc/drive/DifferentialDrive.h>
-#include <frc/PWMVictorSPX.h>
-#include <frc/GenericHID.h>
-#include <frc/TimedRobot.h>
 
-WPI_TalonSRX sr1 = {1};
-WPI_TalonSRX sr2 = {2};
-WPI_TalonSRX sr3 = {3};  
-WPI_TalonSRX sr4 = {4};
-SpeedControllerGroup left(sr1,sr2);
-SpeedControllerGroup right(sr3,sr4);
-DifferentialDrive drivetrain(left,right);
+using namespace frc;
+
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
@@ -52,6 +40,9 @@ void Robot::RobotPeriodic() {}
  * make sure to add them to the chooser code above as well.
  */
 void Robot::AutonomousInit() {
+ 
+timer.Start	( );
+
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
@@ -60,33 +51,73 @@ void Robot::AutonomousInit() {
   if (m_autoSelected == kAutoNameCustom) {
     // Custom Auto goes here
   } else {
-    // Default Auto goes herek
-  }
-}
-
-void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
     // Default Auto goes here
-  }
+}
+}
+void Robot::AutonomousPeriodic() {
+std::cout << timer.Get() << std:: endl;
+if (timer.Get() <= 2) {
+  drivetrain.ArcadeDrive (1,0.0);
+}
+else {
+  intakeMotor.Set(ControlMode::PercentOutput, 0.5);
 }
 
-void Robot::TeleopInit() {}
+//Relay *exampleRelay = new Relay(1);
+//Relay *exampleRelay = new Relay(1, Relay::Value::kForward)
+//exampleRelay->Set(Relay::Value::kOn);
+//exampleRelay->Set(Relay::Value::kForward
+
+
+// intakeMotor.Set(ControlMode::PercentOutput, 0.5);
+
+
+
+// Wait(2.0);
+
+ //if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  //}else{}
+    // Default Auto goes here
+}
+
+void Robot::TeleopInit(){};
 
 void Robot::TeleopPeriodic() {
-// sr1.Set(ControlMode::PercentOutput, -.1);
-// sr2.Set(ControlMode::PercentOutput, -.1);
-// sr3.Set(ControlMode::PercentOutput, .1);
-// sr4.Set(ControlMode::PercentOutput, .1);
-double yLoc = controller.GetY(frc::GenericHID::JoystickHand::kRightHand)/2;
-double xLoc = controller.GetX(frc::GenericHID::JoystickHand::kRightHand)/2;
-drivetrain.ArcadeDrive(yLoc, xLoc);
-std::cout << "Controller y:" << yLoc << "\n";
-std::cout << "Controller x:" << xLoc << "\n";
-// std::cout<< controller.GetY(frc::GenericHID::JoystickHand::kLeftHand)<<std:: endl;
-// std::cout<< controller.GetX(frc::GenericHID::JoystickHand::kRightHand)<<std::endl;
+//  sr1.Set(ControlMode::PercentOutput, -.1);
+//  sr2.Set(ControlMode::PercentOutput, -.1);
+//  sr3.Set(ControlMode::PercentOutput, .1);
+//  sr4.Set(ControlMode::PercentOutput, .1);
 
+  if (controller.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand)){
+  intakeMotor.Set(ControlMode::PercentOutput, -8.0);
+
+  }else if (controller.GetTriggerAxis(GenericHID::JoystickHand::kRightHand)){
+   intakeMotor.Set(ControlMode::PercentOutput, 8.0);
+
+  }else {
+   intakeMotor.Set(ControlMode::PercentOutput, 0.0);
+   
+  }
+
+
+  
+// double yLoc = controller.GetY(frc::GenericHID::JoystickHand::kRightHand)* 0.7;
+// double xLoc = controller.GetX(frc::GenericHID::JoystickHand::kRightHand)* 0.7;
+drivetrain.ArcadeDrive((controller.GetY(frc::GenericHID::JoystickHand::kRightHand)* -0.7), (controller.GetX(frc::GenericHID::JoystickHand::kRightHand)* 0.7));
+// drivetrain.ArcadeDrive((controller.GetX(frc::GenericHID::JoystickHand::kRightHand)/2), (controller.GetX(frc::GenericHID::JoystickHand::kRightHand)));
+
+// std::cout << "Controller y:" << yLoc << "\n";
+// std::cout << "Controller x:" << xLoc << "\n";
+// std::cout<< controller.GetY(frc::GenericHID::JoystickHand::kRightHand)<<std:: endl;
+// std::cout<< controller.GetX(frc::GenericHID::JoystickHand::kRightHand)<<std::endl;
+if (controller.GetBumper(GenericHID::JoystickHand::kLeftHand)){
+  Arm.Set(ControlMode::PercentOutput, -1);
+}else if (controller.GetBumper(GenericHID::JoystickHand::kRightHand)){
+  Arm.Set(ControlMode::PercentOutput, 1);
+}else{
+  Arm.Set(ControlMode::PercentOutput, 0);
+}
 }
 
 void Robot::TestPeriodic() {}
@@ -94,4 +125,3 @@ void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
-
