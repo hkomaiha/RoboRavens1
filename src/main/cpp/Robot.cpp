@@ -57,10 +57,14 @@ timer.Start	( );
 void Robot::AutonomousPeriodic() {
 std::cout << timer.Get() << std:: endl;
 if (timer.Get() <= 2) {
-  drivetrain.ArcadeDrive (1,0.0);
+  drivetrain.ArcadeDrive (.7,0.0);
+}
+else if (timer.Get() > 2 and timer.Get() < 10) {
+  intakeMotor.Set(ControlMode::PercentOutput, 0.5);
 }
 else {
-  intakeMotor.Set(ControlMode::PercentOutput, 0.5);
+  intakeMotor.Set(ControlMode::PercentOutput, 0.0);
+ // timer.Reset	(		);
 }
 
 //Relay *exampleRelay = new Relay(1);
